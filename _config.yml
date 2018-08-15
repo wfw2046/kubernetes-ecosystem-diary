@@ -1,1 +1,4 @@
 theme: jekyll-theme-slate
+kramdown:
+  html_to_native: true
+  syntax_highlighter: rouge

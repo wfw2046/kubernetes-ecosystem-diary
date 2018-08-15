@@ -6,7 +6,7 @@ canonical_url: 'https://docs.projectcalico.org/v3.2/getting-started/'
 
 这里将工作中遇到的一些关于kubernetes的问题汇总。
 
-- [Kubernetes] (kubernetes)
+- [Kubernetes](kubernetes)
 - [网络 ](network)
   - [calico](network/calico)
   - [flannel](network/flannel)

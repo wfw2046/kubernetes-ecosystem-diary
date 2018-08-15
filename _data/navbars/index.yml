@@ -1,0 +1,22 @@
+bigheader: "Kubernetes ecosystem diary"
+abstract: "All you need to know to get started with Calico"
+path: /
+order: 1
+toc:
+- title: kubernetes
+  path: /kubernetes/
+- title: Kubernetes 网路
+  section:
+  - title: Calico
+    path: /network/calico
+  - title: flannel
+    path: /network/flannel
+- title: logging 网路
+  section:
+  - title: 收集（flunetd、logstash）
+    path: /logging/
+    section:
+    - title: flunetd
+      path: /logging/fluentd
+  - title: 查询（elasticsearch）
+    path: /getting-started/kubernetes/requirements

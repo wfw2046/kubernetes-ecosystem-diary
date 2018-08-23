@@ -1,9 +1,11 @@
-## calico 组件
+## calico 架构
+
+<img src="./calico.jpg" width="500" height="400">
 
 
 
 
-## 
+
 
 ### 阻止来自其他namespace的访问
 
@@ -74,6 +76,68 @@ $ kubectl run test-$RANDOM --namespace=test-web --rm -i -t --image=alpine -- sh
 
 访问OK
 
+
+
+###测试指定namespace可以访问
+
+创建测试ns `test-dev`并打一个`test`label
+```sh
+kubectl create namespace test-dev
+kubectl label namespace/test-dev purpose=test
+```
+
+我们设置允许这个`test-dev`namespace的流量可以访问`test-web`namespace重的web服务
+添加networkpolicy
+创建`allow-from-test-dev-test.yaml` 并创建kubernetes集群NetworkPolicy资源
+
+```yaml
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: web-allow-test-dev-test
+spec:
+  podSelector:
+    matchLabels:
+      app: web
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          purpose: test
+```
+```sh
+$ kubectl apply -f allow-from-test-dev-test.yaml
+networkpolicy "web-allow-test-dev-test" created
+```
+
+
+测试从`default`namespace 访问`test-web`服务
+
+
+
+```sh
+$ kubectl run test-$RANDOM --namespace=default --rm -i -t --image=alpine -- sh
+/ # wget -qO- --timeout=2 http://web.test-web
+wget: download timed out
+```
+访问被禁止
+
+
+测试从`test-dev`namespace 访问`test-web`服务
+```sh
+$ kubectl run test-$RANDOM --namespace=test-dev --rm -i -t --image=alpine -- sh
+/ # wget -qO- --timeout=2 http://web.test-web
+<!DOCTYPE html>
+<html>
+```
+
+可以正常访问
+
+
+
+
+
+
 ### 测试指定pod可以访问
 
 删除之前netpol
@@ -116,7 +180,8 @@ wget: download timed out
 ```sh
 $ kubectl run test-$RANDOM --namespace=test-web --labels="access=true" --rm -i -t --image=alpine -- sh
 / # wget -qO- --timeout=2 http://web.test-web
-wget: download timed out
+<!DOCTYPE html>
+<html>
 ```
 
 可以正常访问
@@ -125,3 +190,4 @@ wget: download timed out
 
 ### 清除测试环境
     kubectl delete namespace test-web
+    kubectl delete namespace test-dev

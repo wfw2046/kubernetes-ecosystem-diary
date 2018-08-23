@@ -14,14 +14,14 @@
 ```sh
 kubectl create namespace test-web
 
-kubectl run web --namespace test-web --image=nginx \
+kubectl run web -n test-web --image=nginx \
     --labels=app=web --expose --port 80
 ```
 
 测试
 
 ```sh
-$ kubectl run test-$RANDOM --namespace=default --rm -i -t --image=alpine -- sh
+$ kubectl run test-$RANDOM -n default --rm -i -t --image=alpine -- sh
 / # wget -qO- --timeout=2 http://web.test-web
 <!DOCTYPE html>
 <html>
@@ -57,7 +57,7 @@ networkpolicy "deny-from-other-namespaces" created"
 测试来自`default`namespace的访问
 
 ```sh
-$ kubectl run test-$RANDOM --namespace=default --rm -i -t --image=alpine -- sh
+$ kubectl run test-$RANDOM -n default --rm -i -t --image=alpine -- sh
 / # wget -qO- --timeout=2 http://web.test-web
 wget: download timed out
 ```
@@ -68,7 +68,7 @@ wget: download timed out
 测试来自`test-web`namespace的访问
 
 ```sh
-$ kubectl run test-$RANDOM --namespace=test-web --rm -i -t --image=alpine -- sh
+$ kubectl run test-$RANDOM -n test-web --rm -i -t --image=alpine -- sh
 / # wget -qO- --timeout=2 http://web.test-web
 <!DOCTYPE html>
 <html>
@@ -116,7 +116,7 @@ networkpolicy "web-allow-test-dev-test" created
 
 
 ```sh
-$ kubectl run test-$RANDOM --namespace=default --rm -i -t --image=alpine -- sh
+$ kubectl run test-$RANDOM -n default --rm -i -t --image=alpine -- sh
 / # wget -qO- --timeout=2 http://web.test-web
 wget: download timed out
 ```
@@ -125,7 +125,7 @@ wget: download timed out
 
 测试从`test-dev`namespace 访问`test-web`服务
 ```sh
-$ kubectl run test-$RANDOM --namespace=test-dev --rm -i -t --image=alpine -- sh
+$ kubectl run test-$RANDOM --n test-dev --rm -i -t --image=alpine -- sh
 / # wget -qO- --timeout=2 http://web.test-web
 <!DOCTYPE html>
 <html>
@@ -169,7 +169,7 @@ spec:
 
 
 ```sh
-$ kubectl run test-$RANDOM --namespace=test-web --rm -i -t --image=alpine -- sh
+$ kubectl run test-$RANDOM --n test-web --rm -i -t --image=alpine -- sh
 / # wget -qO- --timeout=2 http://web.test-web
 wget: download timed out
 ```
@@ -178,7 +178,7 @@ wget: download timed out
 
 测试带label标签pod进行访问
 ```sh
-$ kubectl run test-$RANDOM --namespace=test-web --labels="access=true" --rm -i -t --image=alpine -- sh
+$ kubectl run test-$RANDOM -n test-web --labels="access=true" --rm -i -t --image=alpine -- sh
 / # wget -qO- --timeout=2 http://web.test-web
 <!DOCTYPE html>
 <html>

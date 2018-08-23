@@ -2,8 +2,18 @@
 
 <img src="./calico.jpg" width="500" height="400">
 
+calico/node:
+- flex：
+  端口管理：端口的创建删除、包括这些端口arp通信等
+  管理路由：将路由信息写入kernel路由
+  ACl：将acl信息写入iptables
+- bird:
+  分发路由信息
+- confd:
+  模版服务当路由配置变更之后，动态加载路由配置信息
 
-
+Etcd：
+  数存储
 
 
 

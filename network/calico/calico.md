@@ -78,7 +78,7 @@ $ kubectl run test-$RANDOM -n test-web --rm -i -t --image=alpine -- sh
 
 
 
-###测试指定namespace可以访问
+### 测试指定namespace可以访问
 
 创建测试ns `test-dev`并打一个`test`label
 ```sh
@@ -95,6 +95,7 @@ kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
   name: web-allow-test-dev-test
+  namespace: test-web
 spec:
   podSelector:
     matchLabels:
@@ -125,7 +126,7 @@ wget: download timed out
 
 测试从`test-dev`namespace 访问`test-web`服务
 ```sh
-$ kubectl run test-$RANDOM --n test-dev --rm -i -t --image=alpine -- sh
+$ kubectl run test-$RANDOM -n test-dev --rm -i -t --image=alpine -- sh
 / # wget -qO- --timeout=2 http://web.test-web
 <!DOCTYPE html>
 <html>

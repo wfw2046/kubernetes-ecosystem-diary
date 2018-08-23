@@ -170,7 +170,7 @@ spec:
 
 
 ```sh
-$ kubectl run test-$RANDOM --n test-web --rm -i -t --image=alpine -- sh
+$ kubectl run test-$RANDOM -n test-web --rm -i -t --image=alpine -- sh
 / # wget -qO- --timeout=2 http://web.test-web
 wget: download timed out
 ```
